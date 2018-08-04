@@ -20,7 +20,7 @@ public:
 
 	virtual void BeginPlay() override;
 
-	void GetSightRayHitLocation(FVector* hit_location) const;
+	bool GetSightRayHitLocation(FVector& hit_location) const;
 	/**
 	 * \brief Finds what is at crosshair position. Move the tank barrel to mimic.
 	 */
