@@ -19,4 +19,11 @@ public:
 	ATank * GetControlledTank() const;
 
 	virtual void BeginPlay() override;
+
+	/**
+	 * \brief Finds what is at crosshair position. Move the tank barrel to mimic.
+	 */
+	void AimTowardsCrosshair();
+
+	virtual void Tick(float DeltaSeconds) override;
 };
