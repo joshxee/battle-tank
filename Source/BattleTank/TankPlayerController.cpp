@@ -2,7 +2,7 @@
 
 #include "TankPlayerController.h"
 #include "BattleTank/Public/Tank.h"
-
+#include "Runtime/Engine/Classes/Engine/World.h"
 
 void ATankPlayerController::BeginPlay()
 {
@@ -59,15 +59,36 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& hit_location) const
 	FVector LookDirection;
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("World Direction: %s"), *LookDirection.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("World Direction: %s"), *LookDirection.ToString());
+		// line trace along that look direction and see what we hit (up to max range)
+		if(GetLookVectorHitLocation(LookDirection, hit_location))
+		{
+			return true;
+		}
 	}
-	
-	// line trace along that look direction and see what we hit (up to max range)
-	hit_location = FVector(1.0);
 	return false;
 }
 
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+	FHitResult hit_result;
+	const auto StartLocation = PlayerCameraManager->GetCameraLocation();
+	const auto EndLocation = StartLocation + (LookDirection * LineTraceRange);
+	if(GetWorld()->LineTraceSingleByChannel(
+		hit_result,
+		StartLocation,
+		EndLocation,
+		ECollisionChannel::ECC_Visibility)
+		)
+	{
+		HitLocation = hit_result.Location;
+		return true;
+	}
+	HitLocation = FVector(0);
+	return false;
 }

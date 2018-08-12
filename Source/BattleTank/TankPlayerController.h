@@ -22,8 +22,9 @@ public:
 	
 	ATank * GetControlledTank() const;
 
-private:	
+private:
 
+	bool GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const;
 	bool GetSightRayHitLocation(FVector& hit_location) const;
 	/**
 	 * \brief Finds what is at crosshair position. Move the tank barrel to mimic.
@@ -32,6 +33,8 @@ private:
 
 	bool GetLookDirection(FVector2D ScreenLocation, FVector& WorldDirection) const;
 
+	UPROPERTY(EditAnywhere)
+	float LineTraceRange = 1000000.0;
 
 	UPROPERTY(EditAnywhere)
 	float CrossHairXLocation = 0.5;
